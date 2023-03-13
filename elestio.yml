@@ -1,0 +1,47 @@
+ports:
+  - protocol: "HTTPS"
+    targetProtocol: "HTTP"
+    listeningPort: "443"
+    targetPort: "8989"
+    targetIP: "172.17.0.1"
+    public: true
+    path: "/"
+    isAuth: false
+environments:
+  - key: "ADMIN_PASSWORD"
+    value: "random_password"
+  - key: "ADMIN_EMAIL"
+    value: "[EMAIL]"
+  - key: "BASE_URL"
+    value: "https://[CI_CD_DOMAIN]"
+  - key: "SMTP_HOST"
+    value: "172.17.0.1"
+  - key: "SMTP_PORT"
+    value: "25"
+  - key: "SMTP_AUTH_STRATEGY"
+    value: "NONE"
+  - key: "SMTP_FROM_EMAIL"
+    value: "[DOMAIN]@vm.elestio.app"
+
+config:
+  runTime: "dockerCompose"
+  version: ""
+  framework: ""
+  buildCommand: "docker-compose build"
+  buildDir: "/"
+  runCommand: "docker-compose up -d"
+  icon: ""
+  screenshot: "ERPNext.png"
+lifeCycleConfig:
+  preInstallCommand: "./scripts/preInstall.sh"
+  postInstallCommand: "./scripts/postInstall.sh"
+  preBackupCommand: "./scripts/preBackup.sh"
+  postBackupCommand: "./scripts/postBackup.sh"
+  preRestoreCommand: "./scripts/preRestore.sh"
+  postRestoreCommand: "./scripts/postRestore.sh"
+  postDeployCommand: "./scripts/postDeploy.sh"
+webUI:
+  - url: "https://[CI_CD_DOMAIN]"
+    label: "ERPNext Admin"
+    login: "[ADMIN_EMAIL]"
+    password: "[ADMIN_PASSWORD]"
