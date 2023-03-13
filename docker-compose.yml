@@ -260,7 +260,7 @@ services:
           fi
         done;
         echo "common_site_config.json found";
-        bench new-site frontend --admin-password=admin --db-root-password=admin --install-app payments --install-app erpnext --set-default;
+        bench new-site frontend --admin-password=${ADMIN_PASSWORD} --db-root-password=admin --install-app payments --install-app erpnext --set-default;
   db:
     image: mariadb:10.6
     healthcheck:
