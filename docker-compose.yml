@@ -105,6 +105,7 @@ services:
       UPSTREAM_REAL_IP_RECURSIVE: "off"
       PROXY_READ_TIMOUT: 120
       CLIENT_MAX_BODY_SIZE: 50m
+      ADMIN_PASSWORD: $ADMIN_PASSWORD
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs

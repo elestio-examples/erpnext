@@ -18,6 +18,8 @@ environments:
     value: "https://[CI_CD_DOMAIN]"
   - key: "SITES"
     value: "[CI_CD_DOMAIN]"
+  - key: "SITE_NAME"
+    value: "[CI_CD_DOMAIN]"
   - key: "SMTP_HOST"
     value: "172.17.0.1"
   - key: "SMTP_PORT"
@@ -27,6 +29,8 @@ environments:
   - key: "SMTP_FROM_EMAIL"
     value: "[DOMAIN]@vm.elestio.app"
   - key: "DB_PASSWORD"
+    value: "random_password"
+  - key: "ADMIN_PASSWORD"
     value: "random_password"
 
 config:
