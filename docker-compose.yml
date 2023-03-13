@@ -233,6 +233,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+    environment:
+      ADMIN_PASSWORD: ${APP_PASSWORD}
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - assets:/home/frappe/frappe-bench/sites/assets
