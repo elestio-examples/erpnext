@@ -10,12 +10,6 @@ ports:
 environments:
   - key: "ADMIN_PASSWORD"
     value: "random_password"
-  - key: "ADMIN_EMAIL"
-    value: "[EMAIL]"
-  - key: "LETSENCRYPT_EMAIL"
-    value: "[EMAIL]"
-  - key: "BASE_URL"
-    value: "https://[CI_CD_DOMAIN]"
   - key: "SITES"
     value: "[CI_CD_DOMAIN]"
   - key: "APP_URL"
@@ -28,18 +22,6 @@ environments:
     value: "NONE"
   - key: "SMTP_FROM_EMAIL"
     value: "[DOMAIN]@vm.elestio.app"
-  - key: "DB_PASSWORD"
-    value: "random_password"
-  - key: "APP_DB_PARAM"
-    value: "db"
-  - key: "APP_PASSWORD"
-    value: "random_password"
-  - key: "DB_MARIA_PASSWORD"
-    value: "random_password"
-  - key: "DB_MARIA_PORT"
-    value: "3306"
-  - key: "APP_VERSION"
-    value: "latest"
 
 config:
   runTime: "dockerCompose"
@@ -61,5 +43,5 @@ lifeCycleConfig:
 webUI:
   - url: "https://[CI_CD_DOMAIN]"
     label: "ERPNext Admin"
-    login: "[ADMIN_EMAIL]"
+    login: "Administrator"
     password: "[ADMIN_PASSWORD]"

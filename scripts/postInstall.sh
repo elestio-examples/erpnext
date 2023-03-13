@@ -1,7 +1,6 @@
-#set env vars
-set -o allexport; source .env; set +o allexport;
+# #set env vars
+# set -o allexport; source .env; set +o allexport;
 
 #wait until the server is ready
 echo "Waiting for software to be ready ..."
-sleep 270s;
-
+sleep 60s;
