@@ -30,8 +30,6 @@ environments:
     value: "[DOMAIN]@vm.elestio.app"
   - key: "DB_PASSWORD"
     value: "random_password"
-  - key: "ADMIN_PASSWORD"
-    value: "random_password"
   - key: "APP_DB_PARAM"
     value: "db"
   - key: "APP_PASSWORD"
