@@ -22,7 +22,7 @@ services:
       REDIS_SOCKETIO: redis-socketio:6379
       SOCKETIO_PORT: "9000"
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
+      - ./sites:/home/frappe/frappe-bench/sites
 
   create-site:
     image: frappe/erpnext-worker:latest
