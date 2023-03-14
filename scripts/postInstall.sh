@@ -3,4 +3,4 @@
 
 #wait until the server is ready
 echo "Waiting for software to be ready ..."
-sleep 180s;
+sleep 60s;
