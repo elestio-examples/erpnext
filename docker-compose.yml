@@ -1,5 +1,4 @@
 version: "3"
-
 services:
   backend:
     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
@@ -71,7 +70,7 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: frappe/erpnext-nginx:latest
+    image: frappe/erpnext-nginx:${SOFTWARE_VERSION_TAG}
     deploy:
       restart_policy:
         condition: on-failure
@@ -94,7 +93,7 @@ services:
       - "172.17.0.1:8989:8080"
 
   queue-default:
-    image: frappe/erpnext-worker:latest
+    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
     deploy:
       restart_policy:
         condition: on-failure
@@ -108,7 +107,7 @@ services:
       - assets:/home/frappe/frappe-bench/sites/assets
 
   queue-long:
-    image: frappe/erpnext-worker:latest
+    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
     deploy:
       restart_policy:
         condition: on-failure
@@ -122,7 +121,7 @@ services:
       - assets:/home/frappe/frappe-bench/sites/assets
 
   queue-short:
-    image: frappe/erpnext-worker:latest
+    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
     deploy:
       restart_policy:
         condition: on-failure
