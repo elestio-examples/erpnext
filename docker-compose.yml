@@ -7,8 +7,8 @@ services:
       restart_policy:
         condition: on-failure
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
-      - ./assets:/home/frappe/frappe-bench/sites/assets
+      - sites:/home/frappe/frappe-bench/sites
+      - assets:/home/frappe/frappe-bench/sites/assets
 
   configurator:
     image: frappe/erpnext-worker:latest
@@ -22,7 +22,7 @@ services:
       REDIS_SOCKETIO: redis-socketio:6379
       SOCKETIO_PORT: "9000"
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
+      - sites:/home/frappe/frappe-bench/sites
 
   create-site:
     image: frappe/erpnext-worker:latest
@@ -30,8 +30,8 @@ services:
       restart_policy:
         condition: on-failure
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
-      - ./assets:/home/frappe/frappe-bench/sites/assets
+      - sites:/home/frappe/frappe-bench/sites
+      - assets:/home/frappe/frappe-bench/sites/assets
     entrypoint:
       - bash
       - -c
@@ -68,7 +68,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: admin
     volumes:
-      - ./db-data:/var/lib/mysql
+      - db-data:/var/lib/mysql
 
   frontend:
     image: frappe/erpnext-nginx:latest
@@ -88,8 +88,8 @@ services:
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
       UPSTREAM_REAL_IP_RECURSIVE: "off"
     volumes:
-      - ./sites:/usr/share/nginx/html/sites
-      - ./assets:/usr/share/nginx/html/assets
+      - sites:/usr/share/nginx/html/sites
+      - assets:/usr/share/nginx/html/assets
     ports:
       - "172.17.0.1:8989:8080"
 
@@ -104,8 +104,8 @@ services:
       - --queue
       - default
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
-      - ./assets:/home/frappe/frappe-bench/sites/assets
+      - sites:/home/frappe/frappe-bench/sites
+      - assets:/home/frappe/frappe-bench/sites/assets
 
   queue-long:
     image: frappe/erpnext-worker:latest
@@ -118,8 +118,8 @@ services:
       - --queue
       - long
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
-      - ./assets:/home/frappe/frappe-bench/sites/assets
+      - sites:/home/frappe/frappe-bench/sites
+      - assets:/home/frappe/frappe-bench/sites/assets
 
   queue-short:
     image: frappe/erpnext-worker:latest
@@ -132,8 +132,8 @@ services:
       - --queue
       - short
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
-      - ./assets:/home/frappe/frappe-bench/sites/assets
+      - sites:/home/frappe/frappe-bench/sites
+      - assets:/home/frappe/frappe-bench/sites/assets
 
   redis-queue:
     image: redis:6.2-alpine
@@ -141,7 +141,7 @@ services:
       restart_policy:
         condition: on-failure
     volumes:
-      - ./redis-queue-data:/data
+      - redis-queue-data:/data
 
   redis-cache:
     image: redis:6.2-alpine
@@ -149,7 +149,7 @@ services:
       restart_policy:
         condition: on-failure
     volumes:
-      - ./redis-cache-data:/data
+      - redis-cache-data:/data
 
   redis-socketio:
     image: redis:6.2-alpine
@@ -157,7 +157,7 @@ services:
       restart_policy:
         condition: on-failure
     volumes:
-      - ./redis-socketio-data:/data
+      - redis-socketio-data:/data
 
   scheduler:
     image: frappe/erpnext-worker:latest
@@ -168,8 +168,8 @@ services:
       - bench
       - schedule
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
-      - ./assets:/home/frappe/frappe-bench/sites/assets
+      - sites:/home/frappe/frappe-bench/sites
+      - assets:/home/frappe/frappe-bench/sites/assets
 
   websocket:
     image: frappe/frappe-socketio:latest
@@ -177,8 +177,8 @@ services:
       restart_policy:
         condition: on-failure
     volumes:
-      - ./sites:/home/frappe/frappe-bench/sites
-      - ./assets:/home/frappe/frappe-bench/sites/assets
+      - sites:/home/frappe/frappe-bench/sites
+      - assets:/home/frappe/frappe-bench/sites/assets
 
 volumes:
   assets:
