@@ -8,6 +8,8 @@ ports:
     path: "/"
     isAuth: false
 environments:
+  - key: "SOFTWARE_VERSION_TAG"
+    value: "latest"
   - key: "ADMIN_PASSWORD"
     value: "random_password"
   - key: "SITES"
