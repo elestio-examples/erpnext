@@ -10,7 +10,7 @@ Deploy ERPNext server with CI/CD on Elestio
 
 # Once deployed ...
 
-You can can open ERPNext UI here:
+You can open ERPNext UI here:
 
     URL: https://[CI_CD_DOMAIN]
     login: Administrator
