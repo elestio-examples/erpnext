@@ -250,8 +250,7 @@ Here are some example snippets to help you get started creating a container.
 
 |       Variable       | Value (example) |
 | :------------------: | :-------------: |
-| ADMIN_PASSWORD       | your Password   |
-| SECRET_KEY_BASE      | your Secret Key |
+| SOFTWARE_VERSION_TAG | latest          |
 
 
 
