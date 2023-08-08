@@ -38,7 +38,6 @@ Copy the .env file from tests folder to the project directory
 
 Edit the .env file with your own values.
 
-
 Run the project with the following command
 
     docker-compose up -d
@@ -63,12 +62,12 @@ Here are some example snippets to help you get started creating a container.
                 command:
                 - configure.py
                 environment:
-                DB_HOST: db
-                DB_PORT: "3306"
-                REDIS_CACHE: redis-cache:6379
-                REDIS_QUEUE: redis-queue:6379
-                REDIS_SOCKETIO: redis-socketio:6379
-                SOCKETIO_PORT: "9000"
+                DB_HOST: ${DB_HOST}
+                DB_PORT: ${DB_PORT}
+                REDIS_CACHE: ${REDIS_CACHE}
+                REDIS_QUEUE: ${REDIS_QUEUE}
+                REDIS_SOCKETIO: ${REDIS_SOCKETIO}
+                SOCKETIO_PORT: ${SOCKETIO_PORT}
                 volumes:
                 - sites:/home/frappe/frappe-bench/sites
 
@@ -112,7 +111,7 @@ Here are some example snippets to help you get started creating a container.
                 - --skip-character-set-client-handshake
                 - --skip-innodb-read-only-compressed # Temporary fix for MariaDB 10.6
                 environment:
-                MYSQL_ROOT_PASSWORD: admin
+                MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
                 volumes:
                 - db-data:/var/lib/mysql
 
@@ -125,12 +124,12 @@ Here are some example snippets to help you get started creating a container.
                 websocket:
                     condition: service_started
                 environment:
-                BACKEND: backend:8000
-                FRAPPE_SITE_NAME_HEADER: frontend
-                SOCKETIO: websocket:9000
-                UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
-                UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
-                UPSTREAM_REAL_IP_RECURSIVE: "off"
+                BACKEND: ${BACKEND}
+                FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER}
+                SOCKETIO: ${SOCKETIO}
+                UPSTREAM_REAL_IP_ADDRESS: ${UPSTREAM_REAL_IP_ADDRESS}
+                UPSTREAM_REAL_IP_HEADER: ${UPSTREAM_REAL_IP_HEADER}
+                UPSTREAM_REAL_IP_RECURSIVE: ${UPSTREAM_REAL_IP_RECURSIVE}
                 volumes:
                 - sites:/usr/share/nginx/html/sites
                 - assets:/usr/share/nginx/html/assets
@@ -248,11 +247,23 @@ Here are some example snippets to help you get started creating a container.
 
 ### Environment variables
 
-|       Variable       | Value (example) |
-| :------------------: | :-------------: |
-| SOFTWARE_VERSION_TAG | latest          |
-
-
+|          Variable          |   Value (example)   |
+| :------------------------: | :-----------------: |
+|    SOFTWARE_VERSION_TAG    |       latest        |
+|          DB_HOST           |       db-name       |
+|          DB_PORT           |        3306         |
+|        REDIS_CACHE         |  redis-cache:6379   |
+|        REDIS_QUEUE         |  redis-queue:6379   |
+|       REDIS_SOCKETIO       | redis-socketio:6379 |
+|       SOCKETIO_PORT        |        9000         |
+|    MARIADB_VERSION_TAG     |       latest        |
+|    MYSQL_ROOT_PASSWORD     |      password       |
+|          BACKEND           |    backend:8000     |
+|  FRAPPE_SITE_NAME_HEADER   | X-Frappe-Site-Name  |
+|          SOCKETIO          |   websocket:9000    |
+|  UPSTREAM_REAL_IP_ADDRESS  |      127.0.0.1      |
+|  UPSTREAM_REAL_IP_HEADER   |   X-Forwarded-For   |
+| UPSTREAM_REAL_IP_RECURSIVE |         on          |
 
 # Maintenance
 
