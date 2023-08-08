@@ -124,7 +124,7 @@ services:
 
   redis-queue:
     image: redis:6.2-alpine
-    restart: alwayse
+    restart: always
     volumes:
       - redis-queue-data:/data
 
