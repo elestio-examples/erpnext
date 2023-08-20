@@ -1,16 +1,230 @@
+# version: "3"
+# services:
+#   backend:
+#     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+#     restart: always
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+#       - assets:/home/frappe/frappe-bench/sites/assets
+
+#   configurator:
+#     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+#     command:
+#       - configure.py
+#     environment:
+#       DB_HOST: db
+#       DB_PORT: "3306"
+#       REDIS_CACHE: redis-cache:6379
+#       REDIS_QUEUE: redis-queue:6379
+#       REDIS_SOCKETIO: redis-socketio:6379
+#       SOCKETIO_PORT: "9000"
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+
+#   create-site:
+#     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+#     deploy:
+#       restart_policy:
+#         condition: on-failure
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+#       - assets:/home/frappe/frappe-bench/sites/assets
+#     entrypoint:
+#       - bash
+#       - -c
+#     command:
+#       - >
+#         wait-for-it -t 120 db:3306;
+#         wait-for-it -t 120 redis-cache:6379;
+#         wait-for-it -t 120 redis-queue:6379;
+#         wait-for-it -t 120 redis-socketio:6379;
+#         export start=`date +%s`;
+#         until [[ -n `grep -hs ^ common_site_config.json | jq -r ".db_host // empty"` ]] && \
+#           [[ -n `grep -hs ^ common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
+#           [[ -n `grep -hs ^ common_site_config.json | jq -r ".redis_queue // empty"` ]];
+#         do
+#           echo "Waiting for common_site_config.json to be created";
+#           sleep 5;
+#           if (( `date +%s`-start > 120 )); then
+#             echo "could not find common_site_config.json with required keys";
+#             exit 1
+#           fi
+#         done;
+#         echo "common_site_config.json found";
+#         bench new-site frontend --admin-password=${ADMIN_PASSWORD} --db-root-password=admin --install-app payments --install-app erpnext --set-default;
+#   db:
+#     image: mariadb:10.6
+#     restart: always
+#     command:
+#       - --character-set-server=utf8mb4
+#       - --collation-server=utf8mb4_unicode_ci
+#       - --skip-character-set-client-handshake
+#       - --skip-innodb-read-only-compressed # Temporary fix for MariaDB 10.6
+#     environment:
+#       MYSQL_ROOT_PASSWORD: admin
+#     volumes:
+#       - db-data:/var/lib/mysql
+
+#   frontend:
+#     image: frappe/erpnext-nginx:${SOFTWARE_VERSION_TAG}
+#     restart: always
+#     depends_on:
+#       backend:
+#         condition: service_started
+#       websocket:
+#         condition: service_started
+#     environment:
+#       BACKEND: backend:8000
+#       FRAPPE_SITE_NAME_HEADER: frontend
+#       SOCKETIO: websocket:9000
+#       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+#       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+#       UPSTREAM_REAL_IP_RECURSIVE: "off"
+#     volumes:
+#       - sites:/usr/share/nginx/html/sites
+#       - assets:/usr/share/nginx/html/assets
+#     ports:
+#       - "172.17.0.1:8989:8080"
+
+#   queue-default:
+#     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+#     restart: always
+#     command:
+#       - bench
+#       - worker
+#       - --queue
+#       - default
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+#       - assets:/home/frappe/frappe-bench/sites/assets
+
+#   queue-long:
+#     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+#     restart: always
+#     command:
+#       - bench
+#       - worker
+#       - --queue
+#       - long
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+#       - assets:/home/frappe/frappe-bench/sites/assets
+
+#   queue-short:
+#     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+#     restart: always
+#     command:
+#       - bench
+#       - worker
+#       - --queue
+#       - short
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+#       - assets:/home/frappe/frappe-bench/sites/assets
+
+#   redis-queue:
+#     image: redis:6.2-alpine
+#     restart: always
+#     volumes:
+#       - redis-queue-data:/data
+
+#   redis-cache:
+#     image: redis:6.2-alpine
+#     restart: always
+#     volumes:
+#       - redis-cache-data:/data
+
+#   redis-socketio:
+#     image: redis:6.2-alpine
+#     restart: always
+#     volumes:
+#       - redis-socketio-data:/data
+
+#   scheduler:
+#     image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+#     restart: always
+#     command:
+#       - bench
+#       - schedule
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+#       - assets:/home/frappe/frappe-bench/sites/assets
+
+#   websocket:
+#     image: frappe/frappe-socketio:${SOFTWARE_VERSION_TAG}
+#     restart: always
+#     volumes:
+#       - sites:/home/frappe/frappe-bench/sites
+#       - assets:/home/frappe/frappe-bench/sites/assets
+
+# volumes:
+#   assets:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: ${PWD}/assets
+#       o: bind
+#   db-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: ${PWD}/db-data
+#       o: bind
+#   redis-queue-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: ${PWD}/redis-queue-data
+#       o: bind
+#   redis-cache-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: ${PWD}/redis-cache-data
+#       o: bind
+#   redis-socketio-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: ${PWD}/redis-socketio-data
+#       o: bind
+#   sites:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: ${PWD}/sites
+#       o: bind
+
 version: "3"
+
 services:
   backend:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
-    restart: always
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: on-failure
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - assets:/home/frappe/frappe-bench/sites/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
 
   configurator:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: none
+    entrypoint:
+      - bash
+      - -c
     command:
-      - configure.py
+      - >
+        echo "{}" > sites/common_site_config.json;
+        ls -1 apps > sites/apps.txt;
+        bench set-config -g db_host db;
+        bench set-config -gp db_port 3306;
+        bench set-config -g redis_cache "redis://redis-cache:6379";
+        bench set-config -g redis_queue "redis://redis-queue:6379";
+        bench set-config -g redis_socketio "redis://redis-socketio:6379";
+        bench set-config -gp socketio_port 9000;
     environment:
       DB_HOST: db
       DB_PORT: "3306"
@@ -19,16 +233,17 @@ services:
       REDIS_SOCKETIO: redis-socketio:6379
       SOCKETIO_PORT: "9000"
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: frappe/erpnext:v14.24.2
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: none
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - assets:/home/frappe/frappe-bench/sites/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
     entrypoint:
       - bash
       - -c
@@ -39,22 +254,29 @@ services:
         wait-for-it -t 120 redis-queue:6379;
         wait-for-it -t 120 redis-socketio:6379;
         export start=`date +%s`;
-        until [[ -n `grep -hs ^ common_site_config.json | jq -r ".db_host // empty"` ]] && \
-          [[ -n `grep -hs ^ common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
-          [[ -n `grep -hs ^ common_site_config.json | jq -r ".redis_queue // empty"` ]];
+        until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_queue // empty"` ]];
         do
-          echo "Waiting for common_site_config.json to be created";
+          echo "Waiting for sites/common_site_config.json to be created";
           sleep 5;
           if (( `date +%s`-start > 120 )); then
-            echo "could not find common_site_config.json with required keys";
+            echo "could not find sites/common_site_config.json with required keys";
             exit 1
           fi
         done;
-        echo "common_site_config.json found";
-        bench new-site frontend --admin-password=${ADMIN_PASSWORD} --db-root-password=admin --install-app payments --install-app erpnext --set-default;
+        echo "sites/common_site_config.json found";
+        bench new-site frontend --no-mariadb-socket --admin-password=${ADMIN_PASSWORD} --db-root-password=admin --install-app erpnext --set-default;
+
   db:
     image: mariadb:10.6
-    restart: always
+    healthcheck:
+      test: mysqladmin ping -h localhost --password=admin
+      interval: 1s
+      retries: 15
+    deploy:
+      restart_policy:
+        condition: on-failure
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
@@ -66,13 +288,12 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: frappe/erpnext-nginx:${SOFTWARE_VERSION_TAG}
-    restart: always
-    depends_on:
-      backend:
-        condition: service_started
-      websocket:
-        condition: service_started
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command:
+      - nginx-entrypoint.sh
     environment:
       BACKEND: backend:8000
       FRAPPE_SITE_NAME_HEADER: frontend
@@ -80,90 +301,105 @@ services:
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
       UPSTREAM_REAL_IP_RECURSIVE: "off"
+      PROXY_READ_TIMOUT: 120
+      CLIENT_MAX_BODY_SIZE: 50m
     volumes:
-      - sites:/usr/share/nginx/html/sites
-      - assets:/usr/share/nginx/html/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
     ports:
       - "172.17.0.1:8989:8080"
 
   queue-default:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
-    restart: always
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: on-failure
     command:
       - bench
       - worker
       - --queue
       - default
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - assets:/home/frappe/frappe-bench/sites/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
 
   queue-long:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
-    restart: always
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: on-failure
     command:
       - bench
       - worker
       - --queue
       - long
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - assets:/home/frappe/frappe-bench/sites/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
 
   queue-short:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
-    restart: always
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: on-failure
     command:
       - bench
       - worker
       - --queue
       - short
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - assets:/home/frappe/frappe-bench/sites/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
 
   redis-queue:
     image: redis:6.2-alpine
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
     volumes:
       - redis-queue-data:/data
 
   redis-cache:
     image: redis:6.2-alpine
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
     volumes:
       - redis-cache-data:/data
 
   redis-socketio:
     image: redis:6.2-alpine
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
     volumes:
       - redis-socketio-data:/data
 
   scheduler:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
-    restart: always
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: on-failure
     command:
       - bench
       - schedule
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - assets:/home/frappe/frappe-bench/sites/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
 
   websocket:
-    image: frappe/frappe-socketio:${SOFTWARE_VERSION_TAG}
-    restart: always
+    image: frappe/erpnext:v14.24.2
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command:
+      - node
+      - /home/frappe/frappe-bench/apps/frappe/socketio.js
     volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - assets:/home/frappe/frappe-bench/sites/assets
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
 
 volumes:
-  assets:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${PWD}/assets
-      o: bind
   db-data:
     driver: local
     driver_opts:
@@ -187,10 +423,4 @@ volumes:
     driver_opts:
       type: none
       device: ${PWD}/redis-socketio-data
-      o: bind
-  sites:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${PWD}/sites
       o: bind
