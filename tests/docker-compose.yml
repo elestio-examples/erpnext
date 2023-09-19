@@ -1,14 +1,14 @@
 version: "3.3"
 services:
   backend:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: elestio4test/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - assets:/home/frappe/frappe-bench/sites/assets
 
   configurator:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: elestio4test/erpnext:${SOFTWARE_VERSION_TAG}
     command:
       - configure.py
     environment:
@@ -22,7 +22,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
 
   create-site:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: elestio4test/erpnext:${SOFTWARE_VERSION_TAG}
     deploy:
       restart_policy:
         condition: on-failure
@@ -87,7 +87,7 @@ services:
       - "172.17.0.1:8989:8080"
 
   queue-default:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: elestio4test/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
@@ -99,7 +99,7 @@ services:
       - assets:/home/frappe/frappe-bench/sites/assets
 
   queue-long:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: elestio4test/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
@@ -111,7 +111,7 @@ services:
       - assets:/home/frappe/frappe-bench/sites/assets
 
   queue-short:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: elestio4test/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
@@ -141,7 +141,7 @@ services:
       - redis-socketio-data:/data
 
   scheduler:
-    image: frappe/erpnext-worker:${SOFTWARE_VERSION_TAG}
+    image: elestio4test/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
