@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 cp images/production/Containerfile ./
 mv Containerfile Dockerfile
 APPS_JSON=./apps.json
