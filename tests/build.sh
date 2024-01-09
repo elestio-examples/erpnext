@@ -17,5 +17,5 @@ RUN export APP_INSTALL_ARGS="" && \\ \
   bench init ${APP_INSTALL_ARGS} \\
 ' Dockerfile
 sed -i "s~ARG APPS_JSON_BASE64~ARG APPS_JSON_BASE64=${APPS_JSON_BASE64}~g" ./Dockerfile
-rm -f compose.yml
+rm -f compose.yaml
 docker buildx build . --output type=docker,name=elestio4test/erpnext:latest | docker load
