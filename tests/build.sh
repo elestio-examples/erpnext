@@ -18,5 +18,7 @@ RUN export APP_INSTALL_ARGS="" && \\\
 ' Dockerfile
 sed -i '114d' ./Dockerfile
 sed -i "s~ARG APPS_JSON_BASE64~ARG APPS_JSON_BASE64=${APPS_JSON_BASE64}~g" ./Dockerfile
+sed -i "s~FRAPPE_BRANCH=version-15~FRAPPE_BRANCH=develop~g" ./Dockerfile
+sed -i "s~ERPNEXT_BRANCH=version-15~ERPNEXT_BRANCH=develop~g" ./Dockerfile
 rm -f compose.yaml
 docker buildx build . --output type=docker,name=elestio4test/erpnext:latest | docker load
