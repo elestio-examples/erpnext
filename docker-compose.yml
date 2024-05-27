@@ -3,18 +3,13 @@ version: "3"
 services:
   backend:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
   configurator:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: none
     entrypoint:
       - bash
       - -c
@@ -41,9 +36,6 @@ services:
 
   create-site:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: none
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
@@ -73,13 +65,11 @@ services:
 
   db:
     image: mariadb:10.6
+    restart: always
     healthcheck:
       test: mysqladmin ping -h localhost --password=admin
       interval: 1s
       retries: 15
-    deploy:
-      restart_policy:
-        condition: on-failure
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
@@ -92,9 +82,7 @@ services:
 
   frontend:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     command:
       - nginx-entrypoint.sh
     environment:
@@ -114,9 +102,7 @@ services:
 
   queue-default:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     command:
       - bench
       - worker
@@ -128,9 +114,7 @@ services:
 
   queue-long:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     command:
       - bench
       - worker
@@ -142,9 +126,7 @@ services:
 
   queue-short:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     command:
       - bench
       - worker
@@ -156,33 +138,25 @@ services:
 
   redis-queue:
     image: redis:6.2-alpine
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     volumes:
       - redis-queue-data:/data
 
   redis-cache:
     image: redis:6.2-alpine
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     volumes:
       - redis-cache-data:/data
 
   redis-socketio:
     image: redis:6.2-alpine
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     volumes:
       - redis-socketio-data:/data
 
   scheduler:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     command:
       - bench
       - schedule
@@ -192,9 +166,7 @@ services:
 
   websocket:
     image: frappe/erpnext:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: always
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
