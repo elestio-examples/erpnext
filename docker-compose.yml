@@ -110,6 +110,8 @@ services:
       - worker
       - --queue
       - default
+    environment:
+      REDIS_QUEUE: redis-queue:6379
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
@@ -122,6 +124,8 @@ services:
       - worker
       - --queue
       - long
+    environment:
+      REDIS_QUEUE: redis-queue:6379
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
@@ -134,6 +138,8 @@ services:
       - worker
       - --queue
       - short
+    environment:
+      REDIS_QUEUE: redis-queue:6379
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
@@ -149,12 +155,6 @@ services:
     restart: always
     volumes:
       - redis-cache-data:/data
-
-  redis-socketio:
-    image: redis:6.2-alpine
-    restart: always
-    volumes:
-      - redis-socketio-data:/data
 
   scheduler:
     image: frappe/erpnext:latest
@@ -172,6 +172,8 @@ services:
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
+    environment:
+      REDIS_QUEUE: redis-queue:6379
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
