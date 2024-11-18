@@ -2,14 +2,14 @@ version: "3"
 
 services:
   backend:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
   configurator:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     entrypoint:
       - bash
       - -c
@@ -37,7 +37,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
@@ -83,7 +83,7 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - nginx-entrypoint.sh
@@ -103,7 +103,7 @@ services:
       - "172.17.0.1:8989:8080"
 
   queue-default:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
@@ -117,7 +117,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   queue-long:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
@@ -131,7 +131,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   queue-short:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
@@ -157,7 +157,7 @@ services:
       - redis-cache-data:/data
 
   scheduler:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - bench
@@ -167,7 +167,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   websocket:
-    image: frappe/erpnext:latest
+    image: frappe/erpnext:${SOFTWARE_VERSION_TAG}
     restart: always
     command:
       - node
